@@ -5,7 +5,7 @@ import numpy as np
 def generator(data, history_len, delay=0, min_index=0, max_index=None,
               shuffle=False, batch_size=128, step=6):
     # data: The original array of normalized floating point data.
-    # lookback: How many timesteps back should our input data go.
+    # history_len: How many timesteps back should our input data go.
     # delay: How many timesteps in the future should our target be.
     # min_index and max_index: Indices in the data array that delimit which timesteps to draw from.
     #       This is useful for keeping a segment of the data for validation and another one for testing.
@@ -34,6 +34,6 @@ def generator(data, history_len, delay=0, min_index=0, max_index=None,
         targets = np.zeros((len(rows),))
         for j, row in enumerate(rows):
             indices = range(rows[j] - history_len, rows[j], step)
-            samples[j] = data[indices]
-            targets[j] = data[rows[j] + delay][1]
+            samples[j] = data[indices][1:]
+            targets[j] = data[rows[j] + delay][0]
         yield samples, targets
