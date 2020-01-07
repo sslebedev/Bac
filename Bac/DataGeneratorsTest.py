@@ -27,5 +27,14 @@ flow8 = Gen.HazardSinGrow(1000, 500, 1000, 2)
 flow9 = Gen.HazardParabolicGrow(1000, 500, 1000, 2)
 flow10 = Gen.HazardTrueFalse(1000, 500, 1000, 2)
 
-show_flow_vector(Gen.VectorFlow([flow1, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9, flow10]))
+# show_flow_vector(Gen.VectorFlow([flow1, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9, flow10]))
 
+
+# show_flow_vector(Gen.VectorFlow([make_normal_flow_randomized(1000), Gen.ConstFlow(1000, 1)]))
+n1 = Gen.make_normal_flow_randomized(1000)
+n2 = Gen.make_normal_flow_randomized(1000)
+h_start = np.random.randint(400, 800)
+h1 = Gen.make_hazard_flow_randomized(1000, h_start, False)
+h2 = Gen.make_hazard_flow_randomized(1000, h_start, True)
+hb = Gen.HazardTrueFalse(1000, h_start, 1000, 1)
+show_flow_vector(Gen.VectorFlow([hb, Gen.SumFlow([n1, h1]), Gen.SumFlow([n2, h2])]))

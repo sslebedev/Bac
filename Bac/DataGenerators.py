@@ -196,7 +196,7 @@ class HazardSinGrow(HazardFlow):
         if t > self._finish:
             return self._upper_limit
 
-        return 1 + np.sin(np.interp(t, [self._start, self._finish],
+        return 0.5 + np.sin(np.interp(t, [self._start, self._finish],
                                 [np.pi * 3 / 2, np.pi * 5 / 2])) * self._upper_limit / 2
 
 
@@ -210,3 +210,27 @@ class VectorFlow(_FunctionGeneratorAbstract):
 
     def _calc_value(self, t):
         return [g[t] for g in self._generators]
+
+
+# ----------------------------------------------------------------------------------------------
+def make_normal_flow_randomized(length):
+    random_factors = np.random.random(3) * 0.1
+
+    comp_const = ConstFlow(length, 1 * random_factors[0])
+    comp_sin = SinFlow(length,
+                           random_factors[1], np.random.ranf() * length,
+                           np.random.ranf() * length / 2 - length / 4)
+    comp_noise = PerlinFlow(length, random_factors[2], 200,  np.random.randint(4) + 1,
+                                seed=np.random.randint(length))
+
+    return SumFlow([comp_const, comp_sin, comp_noise])
+
+
+def make_hazard_flow_randomized(length, start, offset):
+    random_grow = np.random.randint(3)
+    if random_grow == 0:
+        return HazardSinGrow(length, start + (np.random.randint(200) if offset else 0), length, 1)
+    if random_grow == 1:
+        return HazardParabolicGrow(length, start + (np.random.randint(200) if offset else 0), length, 1)
+    if random_grow == 2:
+        return HazardLinearGrow(length, start + (np.random.randint(200) if offset else 0), length, 1)

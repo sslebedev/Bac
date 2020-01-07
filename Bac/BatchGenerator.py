@@ -1,5 +1,6 @@
-# Test data generation
 import numpy as np
+
+import DataGenerators
 
 
 def generator(data, history_len, delay=0, min_index=0, max_index=None,
@@ -37,3 +38,4 @@ def generator(data, history_len, delay=0, min_index=0, max_index=None,
             samples[j] = data[indices][1:]
             targets[j] = data[rows[j] + delay][0]
         yield samples, targets
+
