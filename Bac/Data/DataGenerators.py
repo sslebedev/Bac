@@ -16,6 +16,10 @@ class DataGeneratorBase(metaclass=abc.ABCMeta):
     def __len__(self):
         pass
 
+    @abc.abstractmethod
+    def dim(self):
+        pass
+
 
 class _FunctionGeneratorAbstract(DataGeneratorBase):
     def __init__(self, time_sec: int):
@@ -32,6 +36,9 @@ class _FunctionGeneratorAbstract(DataGeneratorBase):
 
     def __len__(self):
         return self._fake_time_limit
+
+    def dim(self):
+        return len(self[0])
 
     @abc.abstractmethod
     def _calc_value(self, t):
@@ -213,6 +220,10 @@ class VectorFlow(_FunctionGeneratorAbstract):
 
 
 # ----------------------------------------------------------------------------------------------
+def set_making_seed(seed):
+    np.random.seed(seed)
+
+
 def make_normal_flow_randomized(length):
     random_factors = np.random.random(3) * 0.1
 
@@ -234,3 +245,13 @@ def make_hazard_flow_randomized(length, start, offset):
         return HazardParabolicGrow(length, start + (np.random.randint(200) if offset else 0), length, 1)
     if random_grow == 2:
         return HazardLinearGrow(length, start + (np.random.randint(200) if offset else 0), length, 1)
+
+
+def make_batch_generator():
+    n1 = make_normal_flow_randomized(1000)
+    n2 = make_normal_flow_randomized(1000)
+    h_start = np.random.randint(400, 800)
+    h1 = make_hazard_flow_randomized(1000, h_start, False)
+    h2 = make_hazard_flow_randomized(1000, h_start, True)
+    hb = HazardTrueFalse(1000, h_start, 1000, 1)
+    return VectorFlow([hb, SumFlow([n1, h1]), SumFlow([n2, h2])])

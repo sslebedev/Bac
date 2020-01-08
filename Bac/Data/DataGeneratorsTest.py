@@ -2,8 +2,7 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
-import DataGenerators as Gen
-
+from Data import DataGenerators as Gen
 
 def show_flow_vector(flow):
     plt.figure()
@@ -13,6 +12,8 @@ def show_flow_vector(flow):
     plt.legend()
     plt.show(block=True)
 
+
+np.random.seed(0)
 
 flow1 = Gen.ConstFlow(1000, 0.1)
 flow2 = Gen.SinFlow(1000, 0.1, 200, 50)
@@ -31,10 +32,4 @@ flow10 = Gen.HazardTrueFalse(1000, 500, 1000, 2)
 
 
 # show_flow_vector(Gen.VectorFlow([make_normal_flow_randomized(1000), Gen.ConstFlow(1000, 1)]))
-n1 = Gen.make_normal_flow_randomized(1000)
-n2 = Gen.make_normal_flow_randomized(1000)
-h_start = np.random.randint(400, 800)
-h1 = Gen.make_hazard_flow_randomized(1000, h_start, False)
-h2 = Gen.make_hazard_flow_randomized(1000, h_start, True)
-hb = Gen.HazardTrueFalse(1000, h_start, 1000, 1)
-show_flow_vector(Gen.VectorFlow([hb, Gen.SumFlow([n1, h1]), Gen.SumFlow([n2, h2])]))
+show_flow_vector(Gen.make_batch_generator())
