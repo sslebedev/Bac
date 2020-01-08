@@ -2,6 +2,7 @@
   <dictionary name="sserg">
     <words>
       <w>crossentropy</w>
+      <w>lookback</w>
       <w>perlin</w>
       <w>pred</w>
       <w>relu</w>
