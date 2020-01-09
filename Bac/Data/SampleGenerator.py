@@ -64,8 +64,10 @@ def init_test_samples():
     _set_making_seed(1)
 
     samples = []
+    labels = []
     flow = _make_flow()
     for beg in range(0, 900):
         samples += [_make_sample(flow, beg)[0]]
+        labels += [flow[beg + 99][0]]
 
-    return samples
+    return samples, labels
